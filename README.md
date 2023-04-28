@@ -7,3 +7,4 @@ In this project tools used are :
 1. Python 3.11
 2. Selenium Library
 3. Google translate API Library. 
+4. try adding database
