@@ -265,6 +265,7 @@ modelSuccessDisplay = WebDriverWait(BraveDriver, timeout=5).until(
     )
 modelSuccessDisplay.send_keys(Keys.ESCAPE)
 '''
+
 modalSuccessButton = WebDriverWait(BraveDriver, timeout=5).until(
     EC.element_to_be_clickable(
         (By.XPATH, "//button[@id='btnModalClose'][@class='btn btn-success elevation-1']"))
