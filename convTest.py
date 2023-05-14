@@ -54,6 +54,7 @@ prnButton.click()
 #wait page to load
 
 BraveDriver.implicitly_wait(3)
+
 '''
 infoDialogue= BraveDriver.find_element(By.XPATH, "//div[contains(@class,'modal fade show')][contains(@id,'myModalInfo')]")
 #print(type(infoCloseButton))
@@ -199,8 +200,10 @@ uploadMarkSheet.send_keys(filepath)
 
 
 
-''' <input type="file" class="form-control col-md-6 valid" title="search image" id="MarkId" name="fileMarksheet" onchange="showmarksheet(this)" style="outline: green dotted 2px !important;">'''
-
+''' <input type="file" class="form-control col-md-6 valid" 
+    title="search image" id="MarkId" name="fileMarksheet" onchange="showmarksheet(this)" 
+    style="outline: green dotted 2px !important;">
+'''
 # college Information
 
 PunCode = BraveDriver.find_element(By.XPATH, "//input[@name='PUNCODE'][@id='txtPuncode']")
@@ -210,9 +213,7 @@ PunCode.send_keys("CEGP011350")  # TODO : user input later
 PunCodeVal = (PunCode.get_attribute("value"))
 
 CollegeFindLink = BraveDriver.find_element(By.XPATH, "//a[contains(@data-toggle,'modal')][contains(@data-target,'#SecCollegeList')]")
-
-  # WebDriverWait(BraveDriver, timeout=5).until(EC.element_to_be_clickable(mark))
-
+# WebDriverWait(BraveDriver, timeout=5).until(EC.element_to_be_clickable(mark))
 CollegeFindLink.click()  # force it?
 
 # TODO : make this Nicer Later or even a Function.
@@ -224,8 +225,8 @@ except EXP.TimeoutException:
     print("Request Timed out, no such element is present")
 
 collegeSearchElement.send_keys(PunCodeVal)
-#collegeSearchElement.send_keys(Keys.RETURN)
 
+#collegeSearchElement.send_keys(Keys.RETURN)
 try:
     CollegeSelectButton = WebDriverWait(BraveDriver, timeout=5).until(
         EC.visibility_of_element_located(
