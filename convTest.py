@@ -7,7 +7,7 @@ from selenium import webdriver
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
 from selenium.webdriver.edge.service import Service as EdgeService
 
-BraveDriver = webdriver.Edge(service=EdgeService(
+EdgeDriver = webdriver.Edge(service=EdgeService(
     EdgeChromiumDriverManager().install()))
 '''
 # for brave
@@ -59,28 +59,29 @@ BraveDriver.implicitly_wait(3)
 infoDialogue= BraveDriver.find_element(By.XPATH, "//div[contains(@class,'modal fade show')][contains(@id,'myModalInfo')]")
 #print(type(infoCloseButton))
 
-#infoCloseButton =  BraveDriver.find_element(By.XPATH, "//*[@id='myModalInfo']/div/div/div[3]/button")
+infoCloseButton =  BraveDriver.find_element(By.XPATH, "//*[@id='myModalInfo']/div/div/div[3]/button")
 # (//button[contains(@class,'close')])[5]
-#infoCloseButton.click() 
+infoCloseButton.click() 
 BraveDriver.implicitly_wait(3)
-#BraveDriver.execute_script("arguments[0].click()",infoCloseButton)
+BraveDriver.execute_script("arguments[0].click()",infoCloseButton)
 infoDialogue.send_keys(Keys.ESCAPE)
 closeDialogueWait = WebDriverWait(BraveDriver, 5).until( EC.invisibility_of_element_located((By.XPATH,"//div[contains(@id,'myModalInfo')]")))
-# except EXP.TimeoutException():
-#    print(" finding close button timed out")
 '''
 #----------------------------------------------------------#
 
 #set up the form
 seatNumber = BraveDriver.find_element(By.XPATH,"//input[@name='SeatNo'][@id='txtSeatNo']")
+
 seatNumber.send_keys("B150324353") # TODO : user input later
 
 genderSelect = Select(BraveDriver.find_element(By.XPATH, "//select[@id='txtGender'][@name='Gender']"))
+
 genderSelect.select_by_value("Male") # TODO : user input Later
 
 
 SName = "Phadnis Mihir Vinay" 
 studentName = BraveDriver.find_element(By.XPATH, "//input[@id='txtStudentName']")
+
 studentName.send_keys(SName)  # TODO : user input later
 
 BraveDriver.implicitly_wait(5)
@@ -88,10 +89,12 @@ BraveDriver.implicitly_wait(5)
     #translated text to marathi
 studentName_Mr = transToMarathi(SName) # TODO : make this better ?
 translatedStudentName = BraveDriver.find_element(By.XPATH, "//input[@id='txtStudentName_M'][@name='StudentName_M']") 
+
 translatedStudentName.send_keys(studentName_Mr)
 
 MName = "Phadnis Harshada Vinay"
 motherName = BraveDriver.find_element(By.XPATH, "//input[@id='txtMotherName']")
+
 motherName.send_keys(MName)  # TODO : user input later
 
 BraveDriver.implicitly_wait(5)
@@ -99,6 +102,7 @@ BraveDriver.implicitly_wait(5)
 # translated text to marathi
 motherName_Mr = transToMarathi(MName)
 translatedMotherName = BraveDriver.find_element(By.XPATH, "//input[@id='txtMotherName_M'][@name='MotherName_M']")
+
 translatedMotherName.send_keys(motherName_Mr)
 
 #address values :
@@ -107,6 +111,7 @@ countrySelect = Select(
     BraveDriver.find_element(
         By.XPATH, "//select[contains(@name,'Country')]")
     )
+
 countrySelect.select_by_visible_text("India") # TODO : user input Later
 
 stateSelect = Select(
@@ -115,6 +120,7 @@ stateSelect = Select(
             (By.XPATH, "//select[contains(@name,'State')][contains(@id,'State')]"))
         )
     )
+
 stateSelect.select_by_visible_text("MAHARASHTRA") # TODO : user input Later
 
 districtSelect = Select(
@@ -123,6 +129,7 @@ districtSelect = Select(
             (By.XPATH, "//select[contains(@name,'District')]"))
         )
     ) 
+
 districtSelect.select_by_visible_text("PUNE")  # TODO : user input Later
 
 talukaSelect = Select(
@@ -131,25 +138,31 @@ talukaSelect = Select(
         (By.XPATH, "//select[contains(@name,'Taluka')][contains(@id,'Taluka')]"))
         )
     )
+
 talukaSelect.select_by_visible_text("Pune City") # TODO : user input later
 
 addrPin = BraveDriver.find_element(By.XPATH, "//input[@name='Pincode']")
+
 addrPin.send_keys("411037")  # TODO : user input later
 
 addressField = BraveDriver.find_element(By.XPATH, "//textarea[@name='Address']")
+
 addressField.send_keys("89/708, Maharshi Nagar, behind TMV Colony, Pune") # TODO : user input later
 
 #Contact Information fields
 mobileNumber = BraveDriver.find_element(By.XPATH, "//input[@name='Mobile'][@id='txtMobile']")
+
 mobileNumber.send_keys("9673236900")  # TODO : user input later
 
 emailField = BraveDriver.find_element(By.XPATH, "//input[@id='txtEmail']")
+
 emailField.send_keys("mihirphadnis01@gmail.com")  # TODO : user input later
 
 # Course Information 
 facultyNameSelect = Select(BraveDriver.find_element(
     By.XPATH, "//select[contains(@name,'FacultyID')]")
     )
+
 facultyNameSelect.select_by_visible_text("Engineering")
 
 courseNameSelect = Select(
@@ -158,34 +171,40 @@ courseNameSelect = Select(
             (By.XPATH, "//select[contains(@name,'CourseID')]"))
         )
     )
+
 courseNameSelect.select_by_visible_text("B.E. (Computer)") # TODO : user input later
 
 passingMonthSelect = Select(
     BraveDriver.find_element(By.XPATH, "//select[contains(@name,'PassingMonth')]")
     )
+
 passingMonthSelect.select_by_value("August") # TODO : user input later
 
 passingYearSelect = Select(
     BraveDriver.find_element(
         By.XPATH, "//select[contains(@name,'PassingYear')]")
     )
+
 passingYearSelect.select_by_value("2022") # TODO : user input later
 
 resultSelect = Select(
     BraveDriver.find_element(
         By.XPATH, "//select[contains(@name,'Result')]")
     )
+
 resultSelect.select_by_value("First Class with Distinction") # TODO : user input later
 
 certificateDeliverySelect = Select(
     BraveDriver.find_element(
         By.XPATH, "//select[contains(@name,'DegreeDeliveryType')]")
     )
+
 certificateDeliverySelect.select_by_value("By Post") # TODO : user input later
 
 #class improvement and Upload Mark sheet
 
 classImprovementBox = BraveDriver.find_element(By.XPATH, "//input[contains(@type,'checkbox')]")
+
 checkboxVal = False # TODO : user input later
 if checkboxVal:
     classImprovementBox.click()
@@ -207,6 +226,7 @@ uploadMarkSheet.send_keys(filepath)
 # college Information
 
 PunCode = BraveDriver.find_element(By.XPATH, "//input[@name='PUNCODE'][@id='txtPuncode']")
+
 PunCode.send_keys("CEGP011350")  # TODO : user input later
 
 #PunCode.get_attribute("value")
@@ -269,6 +289,7 @@ modalSuccessButton = WebDriverWait(BraveDriver, timeout=5).until(
     EC.element_to_be_clickable(
         (By.XPATH, "//button[@id='btnModalClose'][@class='btn btn-success elevation-1']"))
     )
+
 modalSuccessButton.click()
 
 BraveDriver.implicitly_wait(10)
@@ -277,6 +298,7 @@ payButtonLink = WebDriverWait(BraveDriver, timeout=5).until(
     EC.element_to_be_clickable(
         (By.XPATH, "//a[contains(@data-original-title,'Please click here to Process this applicatione')]"))
     )
+
 payButtonLink.click()
 
 paymentMethodSelect = Select(
@@ -285,6 +307,7 @@ paymentMethodSelect = Select(
             (By.XPATH, "//select[contains(@name,'PaymentType')]"))
         )
     )
+    
 paymentMethodSelect.select_by_visible_text("Offline")
 
 bankValueSelect = Select(
@@ -293,6 +316,7 @@ bankValueSelect = Select(
             By.XPATH, "//select[contains(@name,'BankName')]"))
         )
     )
+
 bankValueSelect.select_by_value("1")
 
 submitPaymentProcess = BraveDriver.find_element(By.XPATH, "//input[contains(@type,'submit')]")
