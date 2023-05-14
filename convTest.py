@@ -52,8 +52,6 @@ prnButton = BraveDriver.find_element(By.XPATH, "//button[@value='Check PRN Valid
 prnButton.click()
 
 #wait page to load
-'''alertButton = WebDriverWait(BraveDriver, timeout=2).until(EC.visibility_of(BraveDriver.find_element(By.XPATH, "//button[@value='close']")))
-alertButton.click()'''
 
 BraveDriver.implicitly_wait(3)
 '''
