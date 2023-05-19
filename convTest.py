@@ -8,13 +8,6 @@ from selenium.webdriver.chrome.service import Service as BraveService
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.core.utils import ChromeType
 
-BraveDriver = webdriver.Chrome(
-    service=BraveService(
-        ChromeDriverManager(
-            chrome_type=ChromeType.BRAVE).install()
-            )
-        )
-
 #webdriver common imports
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
@@ -27,6 +20,15 @@ from selenium.common import exceptions as EXP
 from translateText import transToMarathi
 
 # fetch URL
+
+def loadDriver():
+    BraveDriver = webdriver.Chrome(
+        service=BraveService(
+            ChromeDriverManager(
+                chrome_type=ChromeType.BRAVE).install()
+        )
+    )
+
 def loadPage():
     pageURL = "https://demodata.unipune.ac.in/"
     BraveDriver.get(pageURL) #set URL
@@ -296,10 +298,11 @@ def simulateForm():
 
         BraveDriver.close()
         
-    except (EXP.TimeoutException, EXP.NoSuchCookieException, EXP.NoAlertPresentException, EXP.WebDriverException) as e:
-        print("An exception has occured :",e)
+    except (EXP.TimeoutException(), EXP.NoSuchElementException(), EXP.NoAlertPresentException(), EXP.WebDriverException()) as e:
+        print(f"An exception has occurred :{e}")
 
 if __name__ == "__main__":
+    loadDriver()
     loadPage()
     simulateForm()
     BraveDriver.quit()
