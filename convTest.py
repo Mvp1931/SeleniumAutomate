@@ -1,4 +1,9 @@
 import os
+import subprocess
+
+# do check if Libraries are present and if not, install libraries.
+subprocess.check_call(['pip','install','selenium'])
+subprocess.check_call(['pip','install','webdriver_manager'])
 
 #selenium browser imports
 from selenium import webdriver
@@ -28,88 +33,90 @@ def loadDriver():
                 chrome_type=ChromeType.BRAVE).install()
         )
     )
+    return BraveDriver
 
-def loadPage():
+def loadPage(driver_name):
     pageURL = "https://demodata.unipune.ac.in/"
-    BraveDriver.get(pageURL) #set URL
-    BraveDriver.maximize_window()
-    assert "Certificate" in BraveDriver.title
+    driver_name.get(pageURL) #set URL
+    driver_name.maximize_window()
+    assert "Certificate" in driver_name.title
 
-def simulateForm():
+def simulateForm(driver_name):
 
     try:
 
-        clinkLink = BraveDriver.find_element(By.LINK_TEXT, "Apply to Regular Convocation Certificate")
+        clinkLink = driver_name.find_element(By.LINK_TEXT, "Apply to Regular Convocation Certificate")
         clinkLink.click()
 
-        ApplyLink = WebDriverWait(BraveDriver, timeout=5).until(
+        ApplyLink = WebDriverWait(driver_name, timeout=5).until(
             EC.element_to_be_clickable(
                 (By.LINK_TEXT, "Apply"))
             )
         ApplyLink.click()
 
         #Setting up the form:
-        prnElement = BraveDriver.find_element(By.XPATH, "//input[@name='PRN']")
+        prnElement = driver_name.find_element(By.XPATH, "//input[@name='PRN']")
         prnElement.clear()
         prnElement.send_keys("71910009H") # TODO : user input later 
 
-        prnButton = BraveDriver.find_element(By.XPATH, "//button[@value='Check PRN Validation'][@type='button']")
+        prnButton = driver_name.find_element(By.XPATH, "//button[@value='Check PRN Validation'][@type='button']")
         prnButton.click()
 
         #wait page to load
 
-        BraveDriver.implicitly_wait(3)
+        driver_name.implicitly_wait(3)
 
         #----------------------------------------------------------#
 
 
-        formEditButton = WebDriverWait(BraveDriver, timeout=5).until(
+        formEditButton = WebDriverWait(driver_name, timeout=5).until(
             EC.element_to_be_clickable(
                 (By.XPATH, "//input[@value='Edit'][@name='Remove']")
                 )
             )
         formEditButton.click()
 
+
         #set up the form
-        seatNumber = BraveDriver.find_element(By.XPATH,"//input[@name='SeatNo'][@id='txtSeatNo']")
+        seatNumber = driver_name.find_element(By.XPATH,"//input[@name='SeatNo'][@id='txtSeatNo']")
         seatNumber.send_keys("B150324353") # TODO : user input later
 
-        genderSelect = Select(BraveDriver.find_element(By.XPATH, "//select[@id='txtGender'][@name='Gender']"))
+        genderSelect = Select(driver_name.find_element(By.XPATH, "//select[@id='txtGender'][@name='Gender']"))
         genderSelect.select_by_value("Male") # TODO : user input Later
 
 
         SName = "Phadnis Mihir Vinay" 
-        studentName = BraveDriver.find_element(By.XPATH, "//input[@id='txtStudentName']")
+        studentName = driver_name.find_element(By.XPATH, "//input[@id='txtStudentName']")
         studentName.send_keys(SName)  # TODO : user input later
 
-        BraveDriver.implicitly_wait(5)
+        driver_name.implicitly_wait(5)
 
         #translated text to marathi
         studentName_Mr = transToMarathi(SName) # TODO : make this better ?
-        translatedStudentName = BraveDriver.find_element(By.XPATH, "//input[@id='txtStudentName_M'][@name='StudentName_M']")
+        translatedStudentName = driver_name.find_element(By.XPATH, "//input[@id='txtStudentName_M'][@name='StudentName_M']")
         translatedStudentName.send_keys(studentName_Mr)
 
         MName = "Phadnis Harshada Vinay"
-        motherName = BraveDriver.find_element(By.XPATH, "//input[@id='txtMotherName']")
+        motherName = driver_name.find_element(By.XPATH, "//input[@id='txtMotherName']")
         motherName.send_keys(MName)  # TODO : user input later
 
-        BraveDriver.implicitly_wait(5)
+        driver_name.implicitly_wait(5)
 
         # translated text to marathi
         motherName_Mr = transToMarathi(MName)
-        translatedMotherName = BraveDriver.find_element(By.XPATH, "//input[@id='txtMotherName_M'][@name='MotherName_M']")
+        translatedMotherName = driver_name.find_element(By.XPATH, "//input[@id='txtMotherName_M'][@name='MotherName_M']")
         translatedMotherName.send_keys(motherName_Mr)
 
         #address values :
 
         countrySelect = Select(
-            BraveDriver.find_element(
+            driver_name.find_element(
                 By.XPATH, "//select[contains(@name,'Country')]")
             )
         countrySelect.select_by_visible_text("India") # TODO : user input Later
 
         stateSelect = Select(
-            WebDriverWait(BraveDriver, timeout=5).until(
+            WebDriverWait(driver_name, timeout=5).until(
                 EC.element_to_be_clickable(
                     (By.XPATH, "//select[contains(@name,'State')][contains(@id,'State')]"))
                 )
@@ -117,7 +124,7 @@ def simulateForm():
         stateSelect.select_by_visible_text("MAHARASHTRA") # TODO : user input Later
 
         districtSelect = Select(
-            WebDriverWait(BraveDriver, timeout=5).until(
+            WebDriverWait(driver_name, timeout=5).until(
                 EC.element_to_be_clickable(
                     (By.XPATH, "//select[contains(@name,'District')]"))
                 )
@@ -125,7 +132,7 @@ def simulateForm():
         districtSelect.select_by_visible_text("PUNE")  # TODO : user input Later
 
         talukaSelect = Select(
-            WebDriverWait(BraveDriver, timeout=5).until(
+            WebDriverWait(driver_name, timeout=5).until(
                 EC.element_to_be_clickable(
                 (By.XPATH, "//select[contains(@name,'Taluka')][contains(@id,'Taluka')]"))
                 )
@@ -133,30 +140,30 @@ def simulateForm():
         talukaSelect.select_by_visible_text("Pune City") # TODO : user input later
 
         
-        addrPin = BraveDriver.find_element(By.XPATH, "//input[@name='Pincode']")
+        addrPin = driver_name.find_element(By.XPATH, "//input[@name='Pincode']")
         addrPin.send_keys("411037")  # TODO : user input later
 
-        addressField = BraveDriver.find_element(By.XPATH, "//textarea[@name='Address']")
+        addressField = driver_name.find_element(By.XPATH, "//textarea[@name='Address']")
         addressField.send_keys("89/708, Maharshi Nagar, behind TMV Colony, Pune") # TODO : user input later
 
 
         #Contact Information fields
-        mobileNumber = BraveDriver.find_element(By.XPATH, "//input[@name='Mobile'][@id='txtMobile']")
+        mobileNumber = driver_name.find_element(By.XPATH, "//input[@name='Mobile'][@id='txtMobile']")
         mobileNumber.send_keys("9673236900")  # TODO : user input later
 
-        emailField = BraveDriver.find_element(By.XPATH, "//input[@id='txtEmail']")
+        emailField = driver_name.find_element(By.XPATH, "//input[@id='txtEmail']")
         emailField.send_keys("mihirphadnis01@gmail.com")  # TODO : user input later
 
         
         # Course Information 
-        facultyNameSelect = Select(BraveDriver.find_element(
+        facultyNameSelect = Select(driver_name.find_element(
             By.XPATH, "//select[contains(@name,'FacultyID')]")
             )
         facultyNameSelect.select_by_visible_text("Engineering")
 
         
         courseNameSelect = Select(
-            WebDriverWait(BraveDriver, timeout=5).until(
+            WebDriverWait(driver_name, timeout=5).until(
                 EC.element_to_be_clickable(
                     (By.XPATH, "//select[contains(@name,'CourseID')]"))
                 )
@@ -165,20 +172,20 @@ def simulateForm():
 
         
         passingMonthSelect = Select(
-            BraveDriver.find_element(By.XPATH, "//select[contains(@name,'PassingMonth')]")
+            driver_name.find_element(By.XPATH, "//select[contains(@name,'PassingMonth')]")
             )
         passingMonthSelect.select_by_value("August") # TODO : user input later
 
         
         passingYearSelect = Select(
-            BraveDriver.find_element(
+            driver_name.find_element(
                 By.XPATH, "//select[contains(@name,'PassingYear')]")
             )
         passingYearSelect.select_by_value("2022") # TODO : user input later
 
         
         resultSelect = Select(
-            BraveDriver.find_element(
+            driver_name.find_element(
                 By.XPATH, "//select[contains(@name,'Result')]")
             )
 
@@ -186,14 +193,14 @@ def simulateForm():
 
         
         certificateDeliverySelect = Select(
-            BraveDriver.find_element(
+            driver_name.find_element(
                 By.XPATH, "//select[contains(@name,'DegreeDeliveryType')]")
             )
         certificateDeliverySelect.select_by_value("By Post") # TODO : user input later
 
         #class improvement and Upload Mark sheet
 
-        classImprovementBox = BraveDriver.find_element(By.XPATH, "//input[contains(@type,'checkbox')]")
+        classImprovementBox = driver_name.find_element(By.XPATH, "//input[contains(@type,'checkbox')]")
 
         '''
         checkboxVal = False # TODO : user input later
@@ -201,7 +208,7 @@ def simulateForm():
             classImprovementBox.click()
         '''
 
-        uploadMarkSheet = BraveDriver.find_element(By.XPATH, "//input[contains(@type,'file')][contains(@name,'fileMarksheet')]")
+        uploadMarkSheet = driver_name.find_element(By.XPATH, "//input[contains(@type,'file')][contains(@name,'fileMarksheet')]")
         #load absolute path of marksheet
         script_dir = os.path.dirname(os.path.abspath(__file__))
         filepath = os.path.join(script_dir, "finalResult.pdf")
@@ -211,26 +218,26 @@ def simulateForm():
 
         # college Information
 
-        PunCode = BraveDriver.find_element(By.XPATH, "//input[@name='PUNCODE'][@id='txtPuncode']")
+        PunCode = driver_name.find_element(By.XPATH, "//input[@name='PUNCODE'][@id='txtPuncode']")
         PunCode.send_keys("CEGP011350")  # TODO : user input later
 
         
         #PunCode.get_attribute("value")
         PunCodeVal = (PunCode.get_attribute("value"))
-        CollegeFindLink = BraveDriver.find_element(By.XPATH, "//a[contains(@data-toggle,'modal')][contains(@data-target,'#SecCollegeList')]")
-        # WebDriverWait(BraveDriver, timeout=5).until(EC.element_to_be_clickable(mark))
+        CollegeFindLink = driver_name.find_element(By.XPATH, "//a[contains(@data-toggle,'modal')][contains(@data-target,'#SecCollegeList')]")
+        # WebDriverWait(driver_name, timeout=5).until(EC.element_to_be_clickable(mark))
         CollegeFindLink.click()  # force it?
 
         
         # TODO : make this Nicer Later or even a Function.
-        collegeSearchElement = WebDriverWait(BraveDriver, timeout=5).until(
+        collegeSearchElement = WebDriverWait(driver_name, timeout=5).until(
             EC.visibility_of_element_located((By.XPATH, "//input[contains(@type, 'search')]"))
             )
         collegeSearchElement.send_keys(PunCodeVal)
 
         
         
-        CollegeSelectButton = WebDriverWait(BraveDriver, timeout=5).until(
+        CollegeSelectButton = WebDriverWait(driver_name, timeout=5).until(
             EC.visibility_of_element_located(
                 (By.XPATH,
                 "//button[@class='btnSelect'][contains(.,'Select')]")
@@ -241,27 +248,27 @@ def simulateForm():
         #------------------------------------------------------------------#
 
         if EC.alert_is_present():    
-            sw_alert = BraveDriver.switch_to.alert
+            sw_alert = driver_name.switch_to.alert
             sw_alert.accept()
 
-        SubmitButton = BraveDriver.find_element(By.XPATH, "//input[contains(@type,'submit')]")
+        SubmitButton = driver_name.find_element(By.XPATH, "//input[contains(@type,'submit')]")
         SubmitButton.click()
 
         if EC.alert_is_present():
-            sw_alert = BraveDriver.switch_to.alert
+            sw_alert = driver_name.switch_to.alert
             sw_alert.accept()
 
 
-        modalSuccessButton = WebDriverWait(BraveDriver, timeout=5).until(
+        modalSuccessButton = WebDriverWait(driver_name, timeout=5).until(
             EC.element_to_be_clickable(
                 (By.XPATH, "//button[@id='btnModalClose'][@class='btn btn-success elevation-1']"))
             )
 
         modalSuccessButton.click()
 
-        BraveDriver.implicitly_wait(10)
+        driver_name.implicitly_wait(10)
 
-        payButtonLink = WebDriverWait(BraveDriver, timeout=5).until(
+        payButtonLink = WebDriverWait(driver_name, timeout=5).until(
             EC.element_to_be_clickable(
                 (By.XPATH, "//a[contains(@data-original-title,'Please click here to Process this applicatione')]"))
             )
@@ -269,7 +276,7 @@ def simulateForm():
         payButtonLink.click()
 
         paymentMethodSelect = Select(
-            WebDriverWait(BraveDriver, timeout=10).until(
+            WebDriverWait(driver_name, timeout=10).until(
                 EC.presence_of_element_located(
                     (By.XPATH, "//select[contains(@name,'PaymentType')]"))
                 )
@@ -278,7 +285,7 @@ def simulateForm():
         paymentMethodSelect.select_by_visible_text("Offline")
 
         bankValueSelect = Select(
-            WebDriverWait(BraveDriver, timeout=10).until(
+            WebDriverWait(driver_name, timeout=10).until(
                 EC.presence_of_element_located((
                     By.XPATH, "//select[contains(@name,'BankName')]"))
                 )
@@ -286,49 +293,49 @@ def simulateForm():
 
         bankValueSelect.select_by_value("1")
 
-        submitPaymentProcess = BraveDriver.find_element(By.XPATH, "//input[contains(@type,'submit')]")
+        submitPaymentProcess = driver_name.find_element(By.XPATH, "//input[contains(@type,'submit')]")
         submitPaymentProcess.submit()
 
-        paymentSuccessDialogue = WebDriverWait(BraveDriver, timeout=10).until(EC.presence_of_element_located(
+        paymentSuccessDialogue = WebDriverWait(driver_name, timeout=10).until(EC.presence_of_element_located(
             (By.XPATH, "//span[contains(.,'Payment Status Update Successfully')]")))
 
         if paymentSuccessDialogue:
-            BraveDriver.find_element(
+            driver_name.find_element(
                 By.XPATH, "//button[contains(@class,'btn btn-success elevation-1')]").click()
 
-        BraveDriver.close()
+        driver_name.close()
         
-    except (EXP.TimeoutException(), EXP.NoSuchElementException(), EXP.NoAlertPresentException(), EXP.WebDriverException()) as e:
+    except (EXP.TimeoutException, EXP.NoSuchElementException, EXP.NoAlertPresentException, EXP.WebDriverException) as e:
         print(f"An exception has occurred :{e}")
 
 if __name__ == "__main__":
-    loadDriver()
-    loadPage()
-    simulateForm()
-    BraveDriver.quit()
+    driver =loadDriver()
+    loadPage(driver)
+    simulateForm(driver)
+    driver.quit()
 
-#BraveDriver.implicitly_wait(10)
+#driver_name.implicitly_wait(10)
 
 #collegeFinder(PunCodeVal)
 # assert PunCodeVal == collegeFinder(PunCodeVal)
 
 # wait condition
-#BraveDriver.implicitly_wait(5)
+#driver_name.implicitly_wait(5)
 
 
 '''def collegeFinder(PUNCODE):
 
     searchPunCode = PUNCODE
-    CollegeFindLink = BraveDriver.find_element(
+    CollegeFindLink = driver_name.find_element(
         By.XPATH, "//a[contains(@data-toggle,'modal')][contains(@data-target,'#SecCollegeList')]")
 
-    # WebDriverWait(BraveDriver, timeout=5).until(EC.element_to_be_clickable(mark))
+    # WebDriverWait(driver_name, timeout=5).until(EC.element_to_be_clickable(mark))
 
     CollegeFindLink.click()  # force it?
 
     # TODO : make this Nicer Later or even a Function.
     try:
-        collegeSearchElement = WebDriverWait(BraveDriver, timeout=5).until(
+        collegeSearchElement = WebDriverWait(driver_name, timeout=5).until(
             EC.visibility_of_element_located((By.XPATH, "//input[@type='search]")))
     except EXP.TimeoutException:
         print("Request Timed out, no such element is present")
@@ -337,7 +344,7 @@ if __name__ == "__main__":
     collegeSearchElement.send_keys(Keys.RETURN)
 
     try:
-        CollegeSelectButton = WebDriverWait(BraveDriver, timeout=5).until(
+        CollegeSelectButton = WebDriverWait(driver_name, timeout=5).until(
             EC.visibility_of_element_located(
                 (By.XPATH,
                  "//button[@class='btnSelect'][contains(.,'Select')]")
@@ -345,20 +352,20 @@ if __name__ == "__main__":
         )
     except EXP.TimeoutException():
         print("Could Not Find requested College!")
-        closeListButton = BraveDriver.find_element(
+        closeListButton = driver_name.find_element(
             By.XPATH, "//button[contains(@class,'close closeUQP')]")
         closeListButton.click()
     ###########################################
 
     if EC.alert_is_present():
-        sw_alert = BraveDriver.switch_to.alert
+        sw_alert = driver_name.switch_to.alert
         sw_alert.accept()
 
     return searchPunCode
 '''
 
 '''
-        modelSuccessDisplay = WebDriverWait(BraveDriver, timeout=5).until(
+        modelSuccessDisplay = WebDriverWait(driver_name, timeout=5).until(
             EC.visibility_of_element_located(
                 (By.XPATH, "//div[contains(@class,'modal fade show')][contains(@id,'myModalSuccess')]")
                 )
@@ -367,16 +374,16 @@ if __name__ == "__main__":
 '''
 
 '''
-infoDialogue= BraveDriver.find_element(By.XPATH, "//div[contains(@class,'modal fade show')][contains(@id,'myModalInfo')]")
+infoDialogue= driver_name.find_element(By.XPATH, "//div[contains(@class,'modal fade show')][contains(@id,'myModalInfo')]")
 #print(type(infoCloseButton))
 
-infoCloseButton =  BraveDriver.find_element(By.XPATH, "//*[@id='myModalInfo']/div/div/div[3]/button")
+infoCloseButton =  driver_name.find_element(By.XPATH, "//*[@id='myModalInfo']/div/div/div[3]/button")
 # (//button[contains(@class,'close')])[5]
 infoCloseButton.click() 
-BraveDriver.implicitly_wait(3)
-BraveDriver.execute_script("arguments[0].click()",infoCloseButton)
+driver_name.implicitly_wait(3)
+driver_name.execute_script("arguments[0].click()",infoCloseButton)
 infoDialogue.send_keys(Keys.ESCAPE)
-closeDialogueWait = WebDriverWait(BraveDriver, 5).until( EC.invisibility_of_element_located((By.XPATH,"//div[contains(@id,'myModalInfo')]")))
+closeDialogueWait = WebDriverWait(driver_name, 5).until( EC.invisibility_of_element_located((By.XPATH,"//div[contains(@id,'myModalInfo')]")))
 '''
 # for edge
 '''

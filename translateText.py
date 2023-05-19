@@ -1,4 +1,7 @@
 # import stuff
+import  subprocess
+subprocess.check_call(['pip','install','googletrans-py'])
+
 from googletrans import Translator
 
 newtTranslator = Translator()
